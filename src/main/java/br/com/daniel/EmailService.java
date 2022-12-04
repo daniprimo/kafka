@@ -10,31 +10,41 @@ import java.util.Properties;
 
 public class EmailService {
 
+    public static final String ECOMMERCE_SEND_EMAIL = "ECOMMERCE_SEND_EMAIL";
+
     public static void main(String[] args) {
-        var consumer = new KafkaConsumer<String, String>(properties());
-        consumer.subscribe(Collections.singletonList("ECOMMERCE_SEND_EMAIL"));
+        var service = new KafkaService(ECOMMERCE_SEND_EMAIL, parse);
+        service.run();
+    }
+
+    private void parse {
+        System.out.println("------------------------------");
+        System.out.println("Send Email");
+        System.out.println(record.key());
+        System.out.println(record.value());
+        System.out.println(record.partition());
+        System.out.println(record.offset());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Email enviado");
+
+    }
+
+    var consumer = new KafkaConsumer<String, String>(properties());
+        consumer.subscribe(Collections.singletonList(ECOMMERCE_SEND_EMAIL));
         while (true) {
-            var records = consumer.poll(Duration.ofMillis(100));
-            if (!records.isEmpty()) {
-                System.out.println("Encontrei " + records.count() + " registros");
+        var records = consumer.poll(Duration.ofMillis(100));
+        if (!records.isEmpty()) {
+            System.out.println("Encontrei " + records.count() + " registros");
 
             for (var record : records) {
-                System.out.println("------------------------------");
-                System.out.println("Send Email");
-                System.out.println(record.key());
-                System.out.println(record.value());
-                System.out.println(record.partition());
-                System.out.println(record.offset());
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("Email enviado");
-            }
             }
         }
     }
+
 
     private static Properties properties() {
         var properties = new Properties();

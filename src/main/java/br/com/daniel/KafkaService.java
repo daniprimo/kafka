@@ -8,4 +8,6 @@ import java.util.Collections;
 
 public class KafkaService {
 
+    public void run() {
+    }
 }
