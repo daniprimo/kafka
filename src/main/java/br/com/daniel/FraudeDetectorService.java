@@ -1,16 +1,7 @@
 package br.com.daniel;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
 
-import java.sql.SQLOutput;
-import java.time.Duration;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Properties;
 
 public class FraudeDetectorService {
 
@@ -18,10 +9,11 @@ public class FraudeDetectorService {
 
     public static void main(String[] args) {
         var fraudeService = new FraudeDetectorService();
-        var kafkaService = new KafkaService(FraudeDetectorService.class.getSimpleName(),
+       try (var kafkaService = new KafkaService(FraudeDetectorService.class.getSimpleName(),
                 ECOMMERCE_NEW_ORDER,
-                fraudeService::parse);
-        kafkaService.run();
+                fraudeService::parse)){
+           kafkaService.run();
+       }
     }
 
     private void parse(ConsumerRecord<String, String> record) {
