@@ -2,6 +2,8 @@ package br.com.daniel;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
+import java.util.HashMap;
+
 
 public class FraudeDetectorService {
 
@@ -9,14 +11,16 @@ public class FraudeDetectorService {
 
     public static void main(String[] args) {
         var fraudeService = new FraudeDetectorService();
-       try (var kafkaService = new KafkaService(FraudeDetectorService.class.getSimpleName(),
+       try (var kafkaService = new KafkaService<Order>(FraudeDetectorService.class.getSimpleName(),
                 ECOMMERCE_NEW_ORDER,
-                fraudeService::parse)){
+                fraudeService::parse,
+               Order.class,
+               new HashMap<String, String>())){
            kafkaService.run();
        }
     }
 
-    private void parse(ConsumerRecord<String, String> record) {
+    private void parse(ConsumerRecord<String, Order> record) {
         System.out.println("------------------------------");
         System.out.println("Processando nova ordem, checando se a fraude");
         System.out.println(record.key());

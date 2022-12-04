@@ -2,6 +2,8 @@ package br.com.daniel;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
+import java.util.Map;
+
 
 public class EmailService {
 
@@ -9,7 +11,7 @@ public class EmailService {
 
     public static void main(String[] args) {
         var emailService = new EmailService();
-       try (var service = new KafkaService(EmailService.class.getSimpleName(), ECOMMERCE_SEND_EMAIL, emailService::parse)){
+       try (var service = new KafkaService(EmailService.class.getSimpleName(), ECOMMERCE_SEND_EMAIL, emailService::parse, String.class, Map.of())){
            service.run();
        }
     }
