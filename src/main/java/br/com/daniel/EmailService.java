@@ -1,6 +1,7 @@
 package br.com.daniel;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
@@ -13,11 +14,12 @@ public class EmailService {
     public static final String ECOMMERCE_SEND_EMAIL = "ECOMMERCE_SEND_EMAIL";
 
     public static void main(String[] args) {
-        var service = new KafkaService(ECOMMERCE_SEND_EMAIL, parse);
+        var emailService = new EmailService();
+        var service = new KafkaService(ECOMMERCE_SEND_EMAIL, emailService::parse);
         service.run();
     }
 
-    private void parse {
+    private void parse (ConsumerRecord<String, String> record) {
         System.out.println("------------------------------");
         System.out.println("Send Email");
         System.out.println(record.key());
@@ -33,27 +35,4 @@ public class EmailService {
 
     }
 
-    var consumer = new KafkaConsumer<String, String>(properties());
-        consumer.subscribe(Collections.singletonList(ECOMMERCE_SEND_EMAIL));
-        while (true) {
-        var records = consumer.poll(Duration.ofMillis(100));
-        if (!records.isEmpty()) {
-            System.out.println("Encontrei " + records.count() + " registros");
-
-            for (var record : records) {
-            }
-        }
-    }
-
-
-    private static Properties properties() {
-        var properties = new Properties();
-        properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
-        properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, EmailService.class.getSimpleName());
-        return properties;
-
-
-    }
 }
