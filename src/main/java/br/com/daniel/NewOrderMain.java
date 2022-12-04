@@ -16,20 +16,23 @@ public class NewOrderMain {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         var producer = new KafkaProducer<String, String>(properties());
-        var key = UUID.randomUUID().toString();
-        var value = "ID:"+ key.toString() + " , Nome Acacio Neves, Prod: Ervilha";
-        var record = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", key, value);
-        Callback callback = (data, ex) -> {
-            if (ex != null) {
-                ex.printStackTrace();
-                return;
-            }
-            System.out.println("Sucesso enviando " + data.topic() + "::::partion " + data.partition() + "/ offset " + data.offset() + "/ temp " + data.timestamp());
-        };
-        var email = "Thank you for order! We are processing you order!";
-        var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", key, email);
-        producer.send(record, callback).get();
-        producer.send(emailRecord, callback).get();
+
+        for (var i = 0 ; i < 10 ; i++) {
+            var key = UUID.randomUUID().toString();
+            var value = "ID:" + key.toString() + " , Nome Acacio Neves, Prod: Ervilha";
+            var record = new ProducerRecord<String, String>("ECOMMERCE_NEW_ORDER", key, value);
+            Callback callback = (data, ex) -> {
+                if (ex != null) {
+                    ex.printStackTrace();
+                    return;
+                }
+                System.out.println("Sucesso enviando " + data.topic() + "::::partion " + data.partition() + "/ offset " + data.offset() + "/ temp " + data.timestamp());
+            };
+            var email = "Thank you for order! We are processing you order!";
+            var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", key, email);
+            producer.send(record, callback).get();
+            producer.send(emailRecord, callback).get();
+        }
     }
 
     private static Properties properties() {
