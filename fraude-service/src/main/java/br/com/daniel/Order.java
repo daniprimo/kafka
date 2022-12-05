@@ -13,4 +13,19 @@ public class Order {
         this.orderId = orderId;
         this.amount = amount;
     }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                ", amount=" + amount +
+                '}';
+    }
+
+    public String getUserID() {
+        return userId;
+    }
 }
